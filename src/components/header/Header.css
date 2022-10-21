@@ -1,0 +1,30 @@
+.header {
+    width: 100%;
+    max-width: 400px;
+    height: 50px;
+    margin-bottom: 30px;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    padding: 20px;
+    margin-top: 20px;
+    color: #D5E3E9;
+}
+
+.header > h1 {
+    -webkit-text-stroke: 1px #D5E3E9;
+    font-weight: 300;
+    font-size: 2.3em;
+    flex: 1;
+    color: #D5E3E9;
+    user-select: none;
+}
+
+.header > .MuiSvgIcon-root {
+    margin-right: 10px;
+    cursor: pointer;
+}
+
+.header > .MuiSvgIcon-root:last-child {
+    margin: 0;
+}
