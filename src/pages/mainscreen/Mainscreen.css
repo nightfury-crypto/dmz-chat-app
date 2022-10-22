@@ -72,7 +72,10 @@
     padding: 10px;
     scroll-behavior: smooth;
 }
-
+.all__chats > a {
+    text-decoration: none !important;
+    color: inherit;
+}
 .all__chats::-webkit-scrollbar {
     width: 3px;
     background-color: #292F3F;

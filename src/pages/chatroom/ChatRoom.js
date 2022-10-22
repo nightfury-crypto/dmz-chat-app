@@ -1,5 +1,5 @@
 import "./ChatRoom.css"
-import { useRef, useEffect } from "react"
+import { useRef, useEffect, useState } from "react"
 
 // material ui
 import InsertEmoticonIcon from '@mui/icons-material/InsertEmoticon';
@@ -10,14 +10,27 @@ import MoreVertIcon from '@mui/icons-material/MoreVert';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import { Avatar, IconButton, Slider } from "@mui/material";
 
+// emoji picker
+import EmojiPicker from 'emoji-picker-react';
+
 const ChatRoom = () => {
-    const scrollRef = useRef()
+    const [pickEmojiActive, setPickEmojiActive] = useState(false)
+    const [saveCursor, setSaveCursor] = useState(null)
+    const [selectionCursor, setSelectionCursor] = useState(0)
+    const [inpmsg, setInpmsg] = useState('')
+    const scrollRef = useRef(null)
+    const inputMessageRef = useRef(null)
+
     useEffect(() => {
         if (scrollRef.current) {
-                scrollRef.current.scrollIntoView()
+            scrollRef.current.scrollIntoView()
+            inputMessageRef.current.focus()
         }
     }, [])
-    
+
+    useEffect(() => {
+            inputMessageRef.current.focus()
+    }, [pickEmojiActive, saveCursor, selectionCursor])
     // demo data
     const chatsAll = [
         {
@@ -91,6 +104,19 @@ const ChatRoom = () => {
     function valuetext(value) {
         return `${value}°C`;
     }
+
+    const emojiInput = (e) => {
+
+        setSaveCursor(e.emoji)
+        const { selectionStart, selectionEnd } = inputMessageRef.current
+        setSelectionCursor(selectionStart)
+        console.log(selectionStart + ' | ' + selectionEnd)
+        // replace selected text with clicked emoji
+        const newVal = inpmsg.slice(0, selectionCursor) + e.emoji + inpmsg.slice(selectionCursor)
+        setInpmsg(newVal)
+        setSelectionCursor(selectionCursor)
+    }
+
     return (
         <div className="chatroom">
             <div className="chatroom__top">
@@ -156,11 +182,21 @@ const ChatRoom = () => {
 
             {/* foot */}
             <div className="chatroom__foot">
-                <IconButton>
+                
+                <div className="emojipick" style={{ display: pickEmojiActive ? 'block' : 'none' }} >
+                <label htmlFor="inpmsg">
+                    <EmojiPicker height={300} width="100%" size="10" onClick={(e) => e.preventDefault() }
+                        onEmojiClick={(e) => {emojiInput(e); inputMessageRef.current.focus()} } lazyLoadEmojis={true}/>
+                </label>
+                </div>
+                <label htmlFor="inpmsg">
+                <IconButton onClick={() => setPickEmojiActive(!pickEmojiActive)} htmlFor="inpmsg">
                     <InsertEmoticonIcon />
                 </IconButton>
+                </label>
                 <span>
-                    <textarea placeholder="Send a message" />
+                    <textarea placeholder="Send a message" value={inpmsg} id="inpmsg"
+                        onChange={(e) => {setInpmsg(e.target.value); }} ref={inputMessageRef} />
                     <IconButton>
                         <SendIcon />
                     </IconButton>
