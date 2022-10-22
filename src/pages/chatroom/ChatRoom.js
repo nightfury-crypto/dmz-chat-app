@@ -13,12 +13,10 @@ import { Avatar, IconButton, Slider } from "@mui/material";
 const ChatRoom = () => {
     const [inpmsg, setInpmsg] = useState('')
     const scrollRef = useRef(null)
-    const inputMessageRef = useRef(null)
 
     useEffect(() => {
         if (scrollRef.current) {
             scrollRef.current.scrollIntoView()
-            inputMessageRef.current.focus()
         }
     }, [])
 
@@ -163,7 +161,7 @@ const ChatRoom = () => {
             <div className="chatroom__foot">
                 <span>
                     <textarea placeholder="Send a message" value={inpmsg} id="inpmsg"
-                        onChange={(e) => {setInpmsg(e.target.value); }} ref={inputMessageRef} onClick={() => scrollRef.current.scrollIntoView()} />
+                        onChange={(e) => {setInpmsg(e.target.value); }}/>
                     <IconButton>
                         <SendIcon />
                     </IconButton>
