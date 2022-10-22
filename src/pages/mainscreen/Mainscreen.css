@@ -101,11 +101,6 @@
     margin-bottom: 20px;
     cursor: pointer;
     border-radius: 8px;
-    transition: background-color 0.5s ease-in-out;
-
-}
-.chat__card:hover {
-    background-color: #131826d2;
 }
 
 .chat__card > .profile {
