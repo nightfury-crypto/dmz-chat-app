@@ -2,7 +2,6 @@ import "./ChatRoom.css"
 import { useRef, useEffect, useState } from "react"
 
 // material ui
-import InsertEmoticonIcon from '@mui/icons-material/InsertEmoticon';
 import SendIcon from '@mui/icons-material/Send';
 import MicIcon from '@mui/icons-material/Mic';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
@@ -10,8 +9,6 @@ import MoreVertIcon from '@mui/icons-material/MoreVert';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import { Avatar, IconButton, Slider } from "@mui/material";
 
-// emoji picker
-import EmojiPicker from 'emoji-picker-react';
 
 const ChatRoom = () => {
     const [inpmsg, setInpmsg] = useState('')
