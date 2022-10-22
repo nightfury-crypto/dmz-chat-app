@@ -1,6 +1,5 @@
 import './Header.css';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
-import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import { signOut } from 'firebase/auth';
 import { auth, db } from '../../firebase/FirebaseSetup';
 import { Avatar } from '@mui/material';

@@ -9,7 +9,6 @@ function Auth() {
 
     // handle Signin
     const handleSignin = async () => {
-        let checkSuccess = false
         const provider = new GoogleAuthProvider();
         signInWithPopup(auth, provider)
             .then(async(result) => {

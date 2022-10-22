@@ -1,4 +1,4 @@
-import { useContext, useState } from 'react';
+import { useContext } from 'react';
 import './App.css';
 import Auth from './pages/auth/Auth';
 import ChatRoom from './pages/chatroom/ChatRoom';
@@ -17,7 +17,7 @@ function App() {
     let vh = window.innerHeight * 0.01;
     document.documentElement.style.setProperty('--vh', `${vh}px`);
   });
-  
+
   return (
     <div className="App">
       {!currentUser ? <Routes>
