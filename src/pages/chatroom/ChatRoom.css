@@ -222,21 +222,8 @@
     justify-content: flex-start;
     align-items: flex-end;
     gap: 5px;
-    padding-bottom: 8px;
+    padding: 4px 8px;
     box-shadow: 0 -1px 4px #464C5D;
-}
-.chatroom__foot .epr-preview {
-    display: none !important;
-}
-.EmojiPickerReact {
-    margin: 0 auto;
-}
-.emojipick {
-    position: absolute;
-    top: -316px;
-    width: 100%;
-    height: 300px;
-    padding: 8px;
 }
 
 .chatroom__foot>span {
@@ -246,7 +233,6 @@
     align-items: center;
     position: relative;
     overflow: hidden;
-    margin-top: 4px;
 }
 
 .chatroom__foot>span>textarea {

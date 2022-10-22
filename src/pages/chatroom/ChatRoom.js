@@ -14,9 +14,6 @@ import { Avatar, IconButton, Slider } from "@mui/material";
 import EmojiPicker from 'emoji-picker-react';
 
 const ChatRoom = () => {
-    const [pickEmojiActive, setPickEmojiActive] = useState(false)
-    const [saveCursor, setSaveCursor] = useState(null)
-    const [selectionCursor, setSelectionCursor] = useState(0)
     const [inpmsg, setInpmsg] = useState('')
     const scrollRef = useRef(null)
     const inputMessageRef = useRef(null)
@@ -28,9 +25,6 @@ const ChatRoom = () => {
         }
     }, [])
 
-    useEffect(() => {
-            inputMessageRef.current.focus()
-    }, [pickEmojiActive, saveCursor, selectionCursor])
     // demo data
     const chatsAll = [
         {
@@ -105,18 +99,6 @@ const ChatRoom = () => {
         return `${value}°C`;
     }
 
-    const emojiInput = (e) => {
-
-        setSaveCursor(e.emoji)
-        const { selectionStart, selectionEnd } = inputMessageRef.current
-        setSelectionCursor(selectionStart)
-        console.log(selectionStart + ' | ' + selectionEnd)
-        // replace selected text with clicked emoji
-        const newVal = inpmsg.slice(0, selectionCursor) + e.emoji + inpmsg.slice(selectionCursor)
-        setInpmsg(newVal)
-        setSelectionCursor(selectionCursor)
-    }
-
     return (
         <div className="chatroom">
             <div className="chatroom__top">
@@ -182,21 +164,9 @@ const ChatRoom = () => {
 
             {/* foot */}
             <div className="chatroom__foot">
-                
-                <div className="emojipick" style={{ display: pickEmojiActive ? 'block' : 'none' }} >
-                <label htmlFor="inpmsg">
-                    <EmojiPicker height={300} width="100%" size="10" onClick={(e) => e.preventDefault() }
-                        onEmojiClick={(e) => {emojiInput(e); inputMessageRef.current.focus()} } lazyLoadEmojis={true}/>
-                </label>
-                </div>
-                <label htmlFor="inpmsg">
-                <IconButton onClick={() => setPickEmojiActive(!pickEmojiActive)} htmlFor="inpmsg">
-                    <InsertEmoticonIcon />
-                </IconButton>
-                </label>
                 <span>
                     <textarea placeholder="Send a message" value={inpmsg} id="inpmsg"
-                        onChange={(e) => {setInpmsg(e.target.value); }} ref={inputMessageRef} />
+                        onChange={(e) => {setInpmsg(e.target.value); }} ref={inputMessageRef} onClick={() => scrollRef.current.scrollIntoView()} />
                     <IconButton>
                         <SendIcon />
                     </IconButton>
