@@ -1,22 +1,41 @@
-import React, { useEffect, useState } from 'react';
 import './Header.css';
-import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import { signOut } from 'firebase/auth';
+import { auth, db } from '../../firebase/FirebaseSetup';
+import { Avatar } from '@mui/material';
+import { useContext, useEffect, useState } from 'react';
+import { AuthContext } from '../../context/AuthContext';
+import { doc, getDoc } from "firebase/firestore";
 
 function Header() {
-  const [showArrow, setShowArrow] = useState(false)
+  const { currentUser } = useContext(AuthContext)
+
+  const [userData, setUserData] = useState({})
 
   useEffect(() => {
-    setShowArrow(false)
-  }, [])
+    const unsub = async () => {
+      const uid = currentUser.uid
+      const usersDocRef = doc(db, "users", uid);
+      const checkexists = await getDoc(usersDocRef);
+      if (checkexists.exists()) {
+        setUserData(checkexists.data())
+      } else {
+        setUserData(currentUser)
+      }
+    }
+    return () => {
+      unsub()
+    }
+  }, [currentUser])
+
 
   return (
     <div className='header'>
-      {showArrow && <ArrowBackIcon />}
       <h1 className='logo'>dmz</h1>
-      <AccountCircleIcon />
-      <MoreVertIcon />
+      <Avatar src={userData.profilePhoto} alt={userData.displayName}
+        style={{ width: '25px', height: '25px' }} />
+      <MoreVertIcon onClick={() => signOut(auth)} />
     </div>
   )
 }

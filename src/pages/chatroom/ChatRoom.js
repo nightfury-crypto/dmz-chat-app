@@ -8,11 +8,13 @@ import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import { Avatar, IconButton, Slider } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 
 
 const ChatRoom = () => {
     const [inpmsg, setInpmsg] = useState('')
     const scrollRef = useRef(null)
+    const history = useNavigate();
 
     useEffect(() => {
         if (scrollRef.current) {
@@ -97,7 +99,7 @@ const ChatRoom = () => {
     return (
         <div className="chatroom">
             <div className="chatroom__top">
-                <IconButton>
+                <IconButton onClick={() => history(-1)}>
                     <ArrowBackIcon />
                 </IconButton>
                 <span>
@@ -161,7 +163,7 @@ const ChatRoom = () => {
             <div className="chatroom__foot">
                 <span>
                     <textarea placeholder="Send a message" value={inpmsg} id="inpmsg"
-                        onChange={(e) => {setInpmsg(e.target.value); }}/>
+                        onChange={(e) => { setInpmsg(e.target.value); }} />
                     <IconButton>
                         <SendIcon />
                     </IconButton>
