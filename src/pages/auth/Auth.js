@@ -23,10 +23,17 @@ function Auth() {
                             displayName: user.displayName,
                             photoURL: user.photoURL,
                             email: user.email,
-                            username: '',
+                            username: user.displayName,
                             profilePhoto: user.photoURL,
                             cretedDT: Timestamp.fromDate(new Date())
                           });
+                    }
+
+                    // users-chat
+                    const userChatDocRef = doc(db, "users-chat", user.uid)
+                    const userChatexistscheck = await getDoc(userChatDocRef)
+                    if (!userChatexistscheck.exists()) {
+                        await setDoc(userChatDocRef, {});
                     }
                   } catch (e) {
                     console.log( e);

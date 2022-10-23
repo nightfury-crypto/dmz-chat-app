@@ -13,12 +13,32 @@
 
 .main__search {
     width: 100%;
-    height: 50px;
-    display: grid;
-    place-items: center;
+    height: fit-content;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
     margin-bottom: 40px;
+    position: relative;
 }
 
+.searchresult {
+    padding: 5px 10px;
+    width: 100%;
+    display: grid;
+    place-items: center;
+    border-radius: 0 0 8px 8px;
+    background-color: #1E263B;
+    box-shadow: inset 0px 4px 4px #00000025;  
+    margin-top: 2px;
+}
+
+.searchresult > div {
+    margin: 0;
+    padding: 2px;
+    height: fit-content !important;
+    padding: 6px 4px;
+}
 .search__div {
     width: 100%;
     max-width: 310px;
@@ -30,7 +50,7 @@
     overflow: hidden;
 }
 
-.main__search > div > input {
+.main__search>.search__div>input {
     width: 100%;
     height: 100%;
     border-radius: 8px;
@@ -46,12 +66,13 @@
     font-size: 0.9em;
 
 }
-.main__search > div > input::placeholder {
-    color: #fff;
-    opacity: 1; /* Firefox */
-  }
 
-.search__div > .MuiSvgIcon-root {
+.main__search>div>input::placeholder {
+    color: #fff;
+    opacity: 1;
+}
+
+.search__div>.MuiSvgIcon-root {
     position: absolute;
     right: -4px;
     top: 0;
@@ -64,7 +85,7 @@
     cursor: pointer;
 }
 
-.all__chats{
+.all__chats {
     width: 100%;
     max-width: 410px;
     height: 100%;
@@ -72,10 +93,12 @@
     padding: 10px;
     scroll-behavior: smooth;
 }
-.all__chats > a {
+
+.all__chats>a {
     text-decoration: none !important;
     color: inherit;
 }
+
 .all__chats::-webkit-scrollbar {
     width: 3px;
     background-color: #292F3F;
@@ -103,7 +126,7 @@
     border-radius: 8px;
 }
 
-.chat__card > .profile {
+.chat__card>.profile {
     width: 43px;
     height: 40px;
     border-radius: 50%;
@@ -111,7 +134,7 @@
     box-shadow: inset 0px 4px 4px #00000025;
 }
 
-.chat__card > .info {
+.chat__card>.info {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
@@ -119,16 +142,52 @@
     margin-left: 10px;
     width: 100%;
     height: 100%;
-    
+
 }
-.chat__card > .info > span {
+
+.chat__card>.info>span {
     font-size: 1.2em;
     margin-bottom: 3px;
     font-family: 'Roboto', sans-serif;
 }
-.chat__card > .info > p {
+
+.chat__card>.info>p {
     font-size: 0.6em;
     font-weight: 100;
     color: lightblue;
     font-family: 'Arapey', serif;
+}
+
+.no-chat {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    position: relative;
+    display: grid;
+    place-items: center;
+    margin: 0 auto;
+}
+
+.no-chat>img {
+    object-fit: contain;
+    width: 50%;
+    height: fit-content;
+    position: relative;
+    filter: grayscale(70%) drop-shadow(10px 4px 0.22rem rgba(255, 255, 255, 0.25));
+
+}
+
+.no-chat>.h3 {
+    position: absolute;
+    z-index: 1;
+    font-family: 'Philosopher', sans-serif;
+    font-size: 1.5em;
+    margin-top: 200px;
+    background: rgba(255, 255, 255, 0.1);
+    padding: 5px 10px;
+    letter-spacing: 10px;
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+    backdrop-filter: blur(2px);
+    -webkit-backdrop-filter: blur(2px);
+    border-radius: 10px;
 }

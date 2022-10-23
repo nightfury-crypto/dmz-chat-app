@@ -7,7 +7,7 @@ import { Routes, Route } from "react-router-dom";
 import { AuthContext } from './context/AuthContext';
 
 function App() {
-  const {currentUser} = useContext(AuthContext)
+  const { currentUser } = useContext(AuthContext)
 
   let vh = window.innerHeight * 0.01;
   document.documentElement.style.setProperty('--vh', `${vh}px`);
@@ -20,13 +20,12 @@ function App() {
 
   return (
     <div className="App">
-      {!currentUser ? <Routes>
-        <Route exact path='/' element={<Auth />} />
-      </Routes> :
-      <Routes>
-        <Route exact path='/' element={<Mainscreen />} />
-        <Route path='/chatroom/:roomId' element={<ChatRoom />} />
-      </Routes>}
+      {!currentUser ? <Auth /> :
+        <Routes>
+          <Route index path='/' element={<Mainscreen />} />
+          <Route path='/chatroom/:roomId' element={<ChatRoom />} />
+        </Routes>
+      }
     </div>
   );
 }
