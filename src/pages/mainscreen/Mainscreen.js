@@ -56,8 +56,7 @@ function Mainscreen() {
     }
   }
   // add user to chatbars
-  const handleadduser = async (e) => {
-    e.preventDefault()
+  const handleadduser = async () => {
     const combindId = currentUser.uid > searchedUser.uid ?
       currentUser.uid + searchedUser.uid :
       searchedUser.uid + currentUser.uid

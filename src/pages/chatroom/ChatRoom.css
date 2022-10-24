@@ -76,10 +76,11 @@
     justify-content: flex-start;
     gap: 25px;
     padding: 20px 6px;
+    padding-bottom: 0;
     position: relative;
 }
 .justforref {
-    padding-top: 4px;
+    margin-top: 4px;
 }
 .chatroom__mid::-webkit-scrollbar {
     width: 0;
