@@ -235,6 +235,26 @@
     padding: 4px 8px;
     box-shadow: 0 -1px 4px #464C5D;
 }
+.imgpreview {
+    width: 60px;
+    height: 60px;
+    position: absolute;
+    top: -62px;
+    left: 2px;
+}
+
+.imgpreview > img{
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+.imgpreview > .MuiSvgIcon-root {
+    position: absolute;
+    right: -2px;
+    width: 18px;
+    top: -5px;
+}
 
 .chatroom__foot>span {
     flex: 1;

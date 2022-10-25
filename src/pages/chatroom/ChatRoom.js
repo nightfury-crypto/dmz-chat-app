@@ -6,10 +6,11 @@ import SendIcon from '@mui/icons-material/Send';
 import MicIcon from '@mui/icons-material/Mic';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
-import PlayArrowIcon from '@mui/icons-material/PlayArrow';
+import CancelIcon from '@mui/icons-material/Cancel';
+// import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import { Avatar, IconButton, Menu, MenuItem, Slider } from "@mui/material";
 import { useNavigate, useParams } from "react-router-dom";
-import { onSnapshot, doc, updateDoc, arrayUnion, Timestamp, getDoc, serverTimestamp } from "firebase/firestore";
+import { onSnapshot, doc, updateDoc, arrayUnion, Timestamp, serverTimestamp } from "firebase/firestore";
 import { db, storage } from "../../firebase/FirebaseSetup";
 import { AuthContext } from "../../context/AuthContext";
 import { ChatContext } from "../../context/ChatContext";
@@ -20,7 +21,7 @@ import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 const ChatRoom = () => {
     const [inpmsg, setInpmsg] = useState('')
     const [imgmsg, setImgmsg] = useState(null)
-    // const [imgpreview, setImgpreview] = useState(null)
+    const [imgpreview, setImgpreview] = useState(null)
     const scrollRef = useRef(null)
     const history = useNavigate();
     const [messages, setMessages] = useState([])
@@ -30,15 +31,17 @@ const ChatRoom = () => {
     const { currentUser } = useContext(AuthContext);
     const { data, dispatch } = useContext(ChatContext);
 
+    // scroll to latest msg
     useEffect(() => {
-        if (scrollRef.current) {
+        if (messages && scrollRef.current) {
             scrollRef.current.scrollIntoView()
         }
     }, [messages])
 
+    //  all chats and setMessages
     useEffect(() => {
         const unsub = onSnapshot(doc(db, "chats", roomId), (doc) => {
-            doc.exists() && setMessages(doc.data().messages)
+            doc.exists() && setMessages(doc.data().messages);
         })
         return () => {
             unsub()
@@ -58,7 +61,14 @@ const ChatRoom = () => {
         currentUser.uid && getUsersChat();
     }, [currentUser.uid, roomId, dispatch])
 
+    // Handle selected images
+    useEffect(() => {
+        if (imgmsg) {
+            setImgpreview(URL.createObjectURL(imgmsg))
+        }
+    }, [imgmsg])
 
+    // send message
     const handlesubmitmsg = async () => {
         if (imgmsg) {
             const storageRef = ref(storage, uuid());
@@ -97,15 +107,146 @@ const ChatRoom = () => {
             setInpmsg('')
         }
         await updateDoc(doc(db, "users-chat", currentUser.uid), {
-            [roomId + ".userInfo.lastmessage"]: inpmsg,
+            [roomId + ".userInfo.lastmessage"]: imgmsg ? "sent a photo" : inpmsg,
             [roomId + ".date"]: serverTimestamp()
         })
         await updateDoc(doc(db, "users-chat", data.user.uid), {
-            [roomId + ".userInfo.lastmessage"]: inpmsg,
+            [roomId + ".userInfo.lastmessage"]: imgmsg ? "sent a photo" : inpmsg,
             [roomId + ".date"]: serverTimestamp()
         })
         scrollRef.current.scrollIntoView({ behavior: "smooth", block: "end", inline: "end" });
     }
+
+    // convert firebase timestamp
+    const converttime = (s) => {
+        const t = new Date(s * 1000)
+
+        if (((new Date().getTime()) - (new Date(s * 1000).getTime())) < 1000) {
+            return "Just Now"
+        }
+        // format time
+        const h = t.getHours() > 9 ? t.getHours() : `0${t.getHours()}`
+        const m = t.getMinutes() > 9 ? t.getMinutes() : `0${t.getMinutes()}`
+        return h + ":" + m
+    }
+
+    // function valuetext(value) {
+    //     return `${value}°C`;
+    // }
+
+    // menu open close handle
+    const handleClick = (event) => {
+        setAnchorEl(event.currentTarget);
+    };
+
+    return (
+        <div className="chatroom">
+            <div className="chatroom__top">
+                <IconButton onClick={() => history(-1)}>
+                    <ArrowBackIcon />
+                </IconButton>
+
+                <span>
+                    <div className="chatavatar">
+                        <Avatar src={data.user.profilePhoto}
+                            alt={data.user.username} />
+                    </div>
+                    <span>
+                        <h3>{data.user.username}</h3>
+                        <p><span className="dot"></span><span>online</span></p>
+                    </span>
+                </span>
+
+                <div className="options">
+                    <input type="file" name="" id="msgimgid" style={{ display: 'none' }}
+                        onChange={(e) => setImgmsg(e.target.files[0])} />
+
+                    <IconButton id="basic-button"
+                        aria-controls={open ? 'basic-menu' : undefined}
+                        aria-haspopup="true"
+                        aria-expanded={open ? 'true' : undefined}
+                        onClick={handleClick}>
+                        <MoreVertIcon />
+                    </IconButton>
+
+                    <Menu id="basic-menu" anchorEl={anchorEl} open={open}
+                        onClose={() => setAnchorEl(null)} MenuListProps={{
+                            'aria-labelledby': 'basic-button',
+                        }}>
+                        <MenuItem onClick={() => setAnchorEl(null)}>
+                            <label htmlFor="msgimgid">Send image</label>
+                        </MenuItem>
+                    </Menu>
+
+                </div>
+            </div>
+
+            {/* mid */}
+            <div className="chatroom__mid">
+                {messages?.map(msg => (
+                    <div key={msg.id} className={`${msg.uid === currentUser.uid ? "sendMsg" : "receiveMsg"}`}>
+                        <div className="main">
+                            <div className="chatavatar">
+                                <Avatar src={msg.uid === currentUser.uid ?
+                                    currentUser.photoURL : data.user.profilePhoto}
+                                    alt={msg.uid === currentUser.uid ?
+                                        currentUser.displayName : data.user.username} />
+                            </div>
+                            <div className="chatmsg">
+                                {/* chat message */}
+                                <div className="captionimg">
+                                    {msg.imgmsg && <img src={msg.imgmsg} alt={msg.uid} />}
+                                    {msg.textmsg && <p>{msg.textmsg}</p>}
+                                    {/* {chat.chataudio && <div className="chataudio">
+                                        <span>
+                                            <PlayArrowIcon />
+                                        </span>
+                                        <Slider
+                                            aria-label="Temperature"
+                                            defaultValue={30}
+                                            getAriaValueText={valuetext}
+                                            color="secondary"
+                                        />
+                                    </div>} */}
+                                </div>
+
+                                {/* time */}
+                                <div className="msgtime">
+                                    <p>{converttime(msg.messageTime.seconds)}</p>
+                                </div>
+                            </div >
+                        </div >
+                    </div >
+                ))}
+                <div className="justforref" ref={scrollRef}>&nbsp;</div>
+            </div>
+
+            {/* foot */}
+            <div className="chatroom__foot">
+                {imgpreview && <div className="imgpreview">
+                    <img src={imgpreview} alt="preview" />
+                    <CancelIcon onClick={() => {
+                        setImgpreview(null)
+                        setImgmsg(null)
+                    }} />
+                </div>}
+                <span>
+                    <textarea placeholder="Send a message" value={inpmsg} id="inpmsg"
+                        onChange={(e) => { setInpmsg(e.target.value); }} />
+                    <IconButton onClick={(e) => handlesubmitmsg(e)}>
+                        <SendIcon />
+                    </IconButton>
+                </span>
+                <IconButton>
+                    <MicIcon />
+                </IconButton>
+            </div>
+        </div>
+    )
+}
+
+export default ChatRoom;
+
 
     // demo data
     // const chatsAll = [
@@ -176,116 +317,3 @@ const ChatRoom = () => {
     //         chatmessage: "This is my dp. ^^", messageType: "image", messageTime: '9:45pm'
     //     },
     // ]
-
-    // function valuetext(value) {
-    //     return `${value}°C`;
-    // }
-
-    const handleClick = (event) => {
-        setAnchorEl(event.currentTarget);
-    };
-    const handleClose = () => {
-        setAnchorEl(null);
-    };
-    return (
-        <div className="chatroom">
-            <div className="chatroom__top">
-                <IconButton onClick={() => history(-1)}>
-                    <ArrowBackIcon />
-                </IconButton>
-
-                <span>
-                    <div className="chatavatar">
-                        <Avatar src={data.user.profilePhoto}
-                            alt={data.user.username} />
-                    </div>
-                    <span>
-                        <h3>{data.user.username}</h3>
-                        <p><span className="dot"></span><span>online</span></p>
-                    </span>
-                </span>
-
-                <div className="options">
-                    <input type="file" name="" id="msgimgid" style={{ display: 'none' }}
-                        onChange={(e) => setImgmsg(e.target.files[0])} />
-
-                    <IconButton id="basic-button"
-                        aria-controls={open ? 'basic-menu' : undefined}
-                        aria-haspopup="true"
-                        aria-expanded={open ? 'true' : undefined}
-                        onClick={handleClick}>
-                        <MoreVertIcon />
-                    </IconButton>
-                    
-                    <Menu id="basic-menu" anchorEl={anchorEl} open={open}
-                        onClose={handleClose} MenuListProps={{
-                            'aria-labelledby': 'basic-button',
-                        }}>
-                        <MenuItem onClick={handleClose}>
-                            <label htmlFor="msgimgid">Send image</label>
-                        </MenuItem>
-                    </Menu>
-
-                </div>
-            </div>
-
-            {/* mid */}
-            <div className="chatroom__mid">
-                {messages.map(msg => (
-                    <div key={msg.id} className={`${msg.uid === currentUser.uid ? "sendMsg" : "receiveMsg"}`}>
-                        <div className="main">
-                            <div className="chatavatar">
-                                <Avatar src={msg.uid === currentUser.uid ?
-                                    currentUser.photoURL : data.user.profilePhoto}
-                                    alt={msg.uid === currentUser.uid ?
-                                        currentUser.displayName : data.user.username} />
-                            </div>
-                            <div className="chatmsg">
-                                {/* chat message */}
-                                <div className="captionimg">
-                                    {msg.imgmsg && <img src={msg.imgmsg} alt={msg.uid} />}
-                                    {msg.textmsg && <p>{msg.textmsg}</p>}
-                                    {/* {chat.chataudio && <div className="chataudio">
-                                        <span>
-                                            <PlayArrowIcon />
-                                        </span>
-                                        <Slider
-                                            aria-label="Temperature"
-                                            defaultValue={30}
-                                            getAriaValueText={valuetext}
-                                            color="secondary"
-                                        />
-                                    </div>} */}
-                                </div>
-
-                                {/* time */}
-                                <div className="msgtime">
-                                    <p>10:00am</p>
-                                </div>
-                            </div >
-                        </div >
-                    </div >
-                ))}
-                <div className="justforref" ref={scrollRef}></div>
-            </div>
-
-            {/* foot */}
-            <div className="chatroom__foot">
-                <span>
-                    <textarea placeholder="Send a message" value={inpmsg} id="inpmsg"
-                        onChange={(e) => { setInpmsg(e.target.value); }} />
-                    <IconButton onClick={(e) => handlesubmitmsg(e)}>
-                        <SendIcon />
-                    </IconButton>
-                </span>
-                <IconButton>
-                    <MicIcon />
-                </IconButton>
-            </div>
-        </div>
-    )
-}
-
-export default ChatRoom
-
-
