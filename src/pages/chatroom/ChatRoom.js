@@ -30,7 +30,7 @@ const ChatRoom = () => {
     const { data, dispatch } = useContext(ChatContext);
 
     useEffect(() => {
-        if (roomId || scrollRef.current) {
+        if (scrollRef.current) {
             scrollRef.current.scrollIntoView()
         }
     }, [messages])
@@ -48,7 +48,7 @@ const ChatRoom = () => {
     useEffect(() => {
         const getUsersChat = () => {
             const unsub = onSnapshot(doc(db, "users-chat", currentUser.uid), (doc) => {
-                dispatch({ type: "CHANGE_USER", payload: Object.entries(doc.data())[0][1].userInfo });
+                dispatch({ type: "CHANGE_USER", payload: Object.entries(doc.data()[roomId])[0][1] });
             });
             return () => {
                 unsub()
@@ -206,7 +206,6 @@ const ChatRoom = () => {
                         </div >
                     </div >
                 ))}
-
                 <div className="justforref" ref={scrollRef}></div>
             </div>
 
@@ -219,7 +218,6 @@ const ChatRoom = () => {
                         <SendIcon />
                     </IconButton>
                 </span>
-
                 <IconButton>
                     <MicIcon />
                 </IconButton>
