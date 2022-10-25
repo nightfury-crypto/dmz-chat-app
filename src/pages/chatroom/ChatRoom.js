@@ -8,7 +8,7 @@ import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import CancelIcon from '@mui/icons-material/Cancel';
 // import PlayArrowIcon from '@mui/icons-material/PlayArrow';
-import { Avatar, IconButton, Menu, MenuItem, Slider } from "@mui/material";
+import { Avatar, IconButton, Menu, MenuItem } from "@mui/material";
 import { useNavigate, useParams } from "react-router-dom";
 import { onSnapshot, doc, updateDoc, arrayUnion, Timestamp, serverTimestamp } from "firebase/firestore";
 import { db, storage } from "../../firebase/FirebaseSetup";
@@ -94,6 +94,7 @@ const ChatRoom = () => {
             );
             setInpmsg("")
             setImgmsg(null)
+            setImgpreview(null)
 
         } else if (inpmsg.trim()) {
             await updateDoc(doc(db, "chats", roomId), {
@@ -104,7 +105,9 @@ const ChatRoom = () => {
                     uid: currentUser.uid,
                 }),
             });
-            setInpmsg('')
+            setInpmsg("")
+            setImgmsg(null)
+            setImgpreview(null)
         }
         await updateDoc(doc(db, "users-chat", currentUser.uid), {
             [roomId + ".userInfo.lastmessage"]: imgmsg ? "sent a photo" : inpmsg,
@@ -114,6 +117,9 @@ const ChatRoom = () => {
             [roomId + ".userInfo.lastmessage"]: imgmsg ? "sent a photo" : inpmsg,
             [roomId + ".date"]: serverTimestamp()
         })
+        setInpmsg("")
+        setImgmsg(null)
+        setImgpreview(null)
         scrollRef.current.scrollIntoView({ behavior: "smooth", block: "end", inline: "end" });
     }
 
@@ -211,7 +217,7 @@ const ChatRoom = () => {
                                 </div>
 
                                 {/* time */}
-                                <div className="msgtime">
+                                <div className="msgtime" >
                                     <p>{converttime(msg.messageTime.seconds)}</p>
                                 </div>
                             </div >

@@ -9,7 +9,14 @@
     overflow: hidden;
     overflow-y: auto;
 }
-
+.userprofile__top {
+    width: 98%;
+    padding: 20px;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    color: #fff;
+}
 .userprofile__content {
     width: 100%;
     height: 100%;
@@ -35,12 +42,22 @@
    border-radius: 50%;
    background-color: #222038;
    box-shadow: inset 0 4px 4px #00000025;
+   position: relative;
+   border: 2px solid #1E263B;
+   padding: 2px;
+}
+
+.pic > img {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    object-fit: contain;
 }
 
 .userprofile__pic > label {
     color: #fff;
     font-family: 'Pridi', serif;
-    margin-top: 10px;
+    margin-top: 20px;
     cursor: pointer;
     position: relative;
 }
@@ -55,4 +72,58 @@
 }
 .userprofile__pic > input {
     display: none;
+}
+
+.userprofile__bottom {
+    margin-top: 50px;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    color: #fff;
+    font-family: 'Arapey', serif;
+    width: 100%;
+    max-width: 250px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    gap: 10px;
+    position: relative;
+}
+
+.userprofile__bottom > div, .userprofile__bottom>div >span {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 15px;
+    height: fit-content;
+}
+.userprofile__bottom>div >span{
+    justify-content: center !important;
+    align-items: flex-end;
+    height: 100%;
+    /* border: 1px solid #fff; */
+}
+.userprofile__bottom>div >span>.MuiSvgIcon-root {
+    width: 36px;
+    height: 30px;
+}
+.userprofile__bottom > div > div {
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-start;
+    flex-direction: column;
+    font-size: 16px;
+    position: relative;
+}
+
+.userprofile__bottom .details > span {
+    font-size: 0.7em;
+    color: #B9B9B9;
+    font-family: 'Pridi', cursive;
+}
+
+.userprofile__bottom .details>p{
+    font-size: 0.8em;
+    font-family: 'Pridi', cursive;
 }

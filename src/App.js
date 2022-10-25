@@ -5,6 +5,7 @@ import ChatRoom from './pages/chatroom/ChatRoom';
 import Mainscreen from './pages/mainscreen/Mainscreen';
 import { Routes, Route } from "react-router-dom";
 import { AuthContext } from './context/AuthContext';
+import UserProfile from './pages/userprofile/UserProfile';
 
 function App() {
   const { currentUser } = useContext(AuthContext)
@@ -23,6 +24,7 @@ function App() {
       {!currentUser ? <Auth /> :
         <Routes>
           <Route index path='/' element={<Mainscreen />} />
+          <Route path='/profile' element={<UserProfile />} />
           <Route path='/chatroom/:roomId' element={<ChatRoom />} />
         </Routes>
       }
