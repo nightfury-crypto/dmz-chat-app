@@ -1,17 +1,21 @@
-import React from 'react'
+import React, { useContext, useEffect } from 'react'
 import './Auth.css'
 import GoogleIcon from '@mui/icons-material/Google';
 import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
-import { auth, db } from '../../firebase/FirebaseSetup';
+import { auth, database, db } from '../../firebase/FirebaseSetup';
 import { doc, getDoc, setDoc, Timestamp } from "firebase/firestore";
+import { AuthContext } from '../../context/AuthContext';
+import { onValue, ref, serverTimestamp } from 'firebase/database';
 
 function Auth() {
+
+    const { currentUser } = useContext(AuthContext);
 
     // handle Signin
     const handleSignin = async () => {
         const provider = new GoogleAuthProvider();
         signInWithPopup(auth, provider)
-            .then(async(result) => {
+            .then(async (result) => {
                 const user = result.user;
                 // added user collection if doesnot exists
                 try {
@@ -26,7 +30,7 @@ function Auth() {
                             username: user.displayName,
                             profilePhoto: user.photoURL,
                             cretedDT: Timestamp.fromDate(new Date())
-                          });
+                        });
                     }
 
                     // users-chat
@@ -35,9 +39,9 @@ function Auth() {
                     if (!userChatexistscheck.exists()) {
                         await setDoc(userChatDocRef, {});
                     }
-                  } catch (e) {
-                    console.log( e);
-                  }
+                } catch (e) {
+                    console.log(e);
+                }
             }).catch((error) => {
                 console.log(error)
             });

@@ -121,7 +121,7 @@ const ChatRoom = () => {
     const converttime = (s) => {
         const t = new Date(s * 1000)
 
-        if (((new Date().getTime()) - (new Date(s * 1000).getTime())) < 1000) {
+        if (((new Date().getTime()) - (new Date(s * 1000).getTime())) < 10000) {
             return "Just Now"
         }
         // format time

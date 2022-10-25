@@ -1,6 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react'
 import './Mainscreen.css'
 import SearchIcon from '@mui/icons-material/Search';
+import CancelIcon from '@mui/icons-material/Cancel';
 import AddIcon from '@mui/icons-material/Add';
 import Header from '../../components/header/Header';
 import { Link } from 'react-router-dom';
@@ -24,7 +25,7 @@ function Mainscreen() {
   useEffect(() => {
     const getUsersChat = () => {
       const unsub = onSnapshot(doc(db, "users-chat", currentUser.uid), (doc) => {
-        setUserschatData(doc.data())
+        doc.data() && setUserschatData(Object.entries(doc.data()))
       });
 
       return () => {
@@ -34,7 +35,6 @@ function Mainscreen() {
     currentUser.uid && getUsersChat();
   }, [currentUser.uid])
 
-
   // search for user to add
   const handlesearch = async (e) => {
     e.preventDefault();
@@ -43,11 +43,13 @@ function Mainscreen() {
     try {
       const querySnapshot = await getDocs(q)
       querySnapshot.forEach((doc) => {
+        console.log(doc.data())
         if (doc.data().email !== currentUser.email) {
           setSearchedUser(doc.data())
           setNoUserFound(false);
           setSearchQuery('')
         } else {
+          console.log('no user')
           setNoUserFound(true)
         }
       })
@@ -116,6 +118,7 @@ function Mainscreen() {
         {noUserFound && <div className="searchresult" style={{ width: '100%', maxWidth: '310px' }}>
           <div className="chat__card" style={{ maxWidth: '250px' }}>
             <span className="name" style={{ paddingLeft: '10px' }}>No User Found!</span>
+            <CancelIcon onClick={() => { setNoUserFound(false); setSearchQuery(''); setSearchedUser(null) }} />
           </div>
         </div>}
         {searchedUser && <div className="searchresult" style={{ width: '100%', maxWidth: '310px' }}>
@@ -125,25 +128,29 @@ function Mainscreen() {
             <IconButton style={{ marginLeft: 'auto', color: '#fff' }} onClick={handleadduser}>
               <AddIcon />
             </IconButton>
+            <CancelIcon onClick={() => { setNoUserFound(false); setSearchQuery(''); setSearchedUser(null)}} />
           </div>
         </div>}
       </div>
 
       <div className="all__chats">
-        {userschatData && Object.entries(userschatData)?.map((chat) =>
+        {(userschatData.length > 0) ? userschatData?.sort((a, b) => b[1].date - a[1].date).map((chat) =>
           <Link to={`/chatroom/${chat[0]}`} key={chat[0]}>
             <div className="chat__card" onClick={() => handledispatch(chat[1].userInfo)}>
-              <div className="profile"><Avatar src={chat[1].userInfo.profilePhoto} alt={chat[1].userInfo.username} /></div>
+              <div className="profile">
+                <Avatar src={chat[1].userInfo.profilePhoto} alt={chat[1].userInfo.username} /></div>
               <div className="info">
                 <span className="name">{chat[1].userInfo.username}</span>
                 <p className="seen">{chat[1].userInfo.lastmessage}</p>
               </div>
             </div>
-          </Link>)}
-        {/* // : <div className="no-chat">
-          //   <h3 className="h3">WELCOME</h3>
-          //   <img src="/images/test.png" alt="no chat" />
-          // </div>} */}
+          </Link>
+        ) : (
+          <div className="no-chat">
+            <h3 className="h3">WELCOME</h3>
+            <img src="/images/test.png" alt="no chat" />
+          </div>
+        )}
 
       </div>
     </div>
