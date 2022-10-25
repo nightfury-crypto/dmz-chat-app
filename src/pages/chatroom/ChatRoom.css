@@ -64,7 +64,15 @@
     border-radius: 50%;
     margin-top: 3px;
 }
-
+.MuiList-root {
+    padding: 0 !important;
+    margin: 0 !important;
+    border: 0;
+}
+.MuiList-root > li {
+    background-color: #464C5D;
+    color: #fff;
+}
 /* chatroom mid */
 .chatroom__mid {
     width: 100%;
@@ -175,7 +183,8 @@
 }
 .chatroom__mid .main > .chatmsg  .captionimg > img {
     width: 100%;
-    height: 220px;
+    height: fit-content;
+    max-height: 220px;
     position: relative;
     object-fit: cover;
 }
