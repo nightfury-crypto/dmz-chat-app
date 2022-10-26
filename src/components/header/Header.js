@@ -20,7 +20,7 @@ function Header() {
     <div className='header'>
       <h1 className='logo'>dmz</h1>
       <Avatar src={currentUser?.photoURL} alt={currentUser?.displayName}
-        style={{ width: '25px', height: '25px' }} onClick={handleClick}
+        style={{ width: '25px', height: '25px', border: '2px solid lightblue', cursor: 'pointer' }} onClick={handleClick}
         size="small"
         sx={{ ml: 2 }}
         aria-controls={open ? 'account-menu' : undefined}

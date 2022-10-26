@@ -10,11 +10,13 @@ import { AuthContext } from '../../context/AuthContext';
 import { collection, doc, getDoc, getDocs, onSnapshot, query, serverTimestamp, setDoc, updateDoc, where } from 'firebase/firestore';
 import { db } from "../../firebase/FirebaseSetup.js";
 import { ChatContext } from '../../context/ChatContext';
+import LoadingComp from '../../components/loadingcomp/LoadingComp';
 
 function Mainscreen() {
   const { currentUser } = useContext(AuthContext)
   const { dispatch } = useContext(ChatContext)
   const [userschatData, setUserschatData] = useState([])
+  const [isLoading, setisLoading] = useState(false)
 
   // search related
   const [searchQuery, setSearchQuery] = useState('')
@@ -23,9 +25,10 @@ function Mainscreen() {
 
   // user connected get data
   useEffect(() => {
+    setisLoading(true)
     const getUsersChat = () => {
       const unsub = onSnapshot(doc(db, "users-chat", currentUser.uid), (doc) => {
-        doc.data() && setUserschatData(Object.entries(doc.data()))
+        doc.data() && setUserschatData(Object.entries(doc.data())); setisLoading(false) 
       });
 
       return () => {
@@ -104,6 +107,10 @@ function Mainscreen() {
   // dispatch
   const handledispatch = (u) => {
     dispatch({ type: "CHANGE_USER", payload: u })
+  }
+
+  if (isLoading) {
+    return <LoadingComp title={"loading..."}/>
   }
   return (
     <div className='mainscreen'>
