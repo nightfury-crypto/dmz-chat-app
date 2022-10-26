@@ -8,7 +8,7 @@ const ChatRoomTop = ({ activeStatus, data, setImgmsg }) => {
     const history = useNavigate();
     const [anchorEl, setAnchorEl] = useState(null);
     const open = Boolean(anchorEl);
-console.log(activeStatus)
+    
     // menu open close handle
     const handleClick = (event) => {
         setAnchorEl(event.currentTarget);

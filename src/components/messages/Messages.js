@@ -8,10 +8,9 @@ import { Avatar } from '@mui/material';
 const Messages = ({ roomId }) => {
 
     const { currentUser } = useContext(AuthContext);
-    const { data} = useContext(ChatContext);
+    const { data } = useContext(ChatContext);
     const [messages, setMessages] = useState([])
     const scrollRef = useRef(null)
-
     // scroll to latest msg
     useEffect(() => {
         const scrollDown = () => {
@@ -23,6 +22,7 @@ const Messages = ({ roomId }) => {
 
         (messages && scrollRef.current) && scrollDown()
     }, [messages])
+   
     //  all chats and setMessages
     useEffect(() => {
         const unsub = onSnapshot(doc(db, "chats", roomId), (doc) => {
@@ -59,7 +59,9 @@ const Messages = ({ roomId }) => {
                         <div className="chatmsg">
                             {/* chat message */}
                             <div className="captionimg">
-                                {msg.imgmsg && <img src={msg.imgmsg} alt={msg.uid} />}
+                                {msg.imgmsg && <>
+                                    {msg.filetype && msg.filetype.split('/')[0] === 'image' ?
+                                        <img src={msg.imgmsg} alt="dmz" /> : <video controls autoPlay src={msg.imgmsg} alt="dmz" />}</>}
                                 {msg.textmsg && <p>{msg.textmsg}</p>}
                                 {/* {chat.chataudio && <div className="chataudio">
                                         <span>

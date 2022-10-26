@@ -105,7 +105,6 @@ function Mainscreen() {
   const handledispatch = (u) => {
     dispatch({ type: "CHANGE_USER", payload: u })
   }
-
   return (
     <div className='mainscreen'>
       <Header />
@@ -121,6 +120,7 @@ function Mainscreen() {
             <CancelIcon onClick={() => { setNoUserFound(false); setSearchQuery(''); setSearchedUser(null) }} />
           </div>
         </div>}
+
         {searchedUser && <div className="searchresult" style={{ width: '100%', maxWidth: '310px' }}>
           <div className="chat__card" style={{ maxWidth: '250px' }}>
             <Avatar src={searchedUser.profilePhoto} alt={searchedUser.displayName} />
@@ -151,7 +151,7 @@ function Mainscreen() {
             <img src="/images/test.png" alt="no chat" />
           </div>
         )}
-
+        
       </div>
     </div>
   )

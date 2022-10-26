@@ -74,15 +74,16 @@ const ChatRoom = () => {
             const uploadTask = uploadBytesResumable(storageRef, imgmsg);
             uploadTask.on(
                 (error) => {
-                    console.log("error")
+                    console.log(error)
                 },
-                () => {
-                    getDownloadURL(uploadTask.snapshot.ref).then(async (downloadURL) => {
+                async () => {
+                    await getDownloadURL(uploadTask.snapshot.ref).then(async (downloadURL) => {
                         await updateDoc(doc(db, "chats", roomId), {
                             messages: arrayUnion({
                                 id: uuid(),
                                 imgmsg: downloadURL,
-                                textmsg: inpmsg && inpmsg,
+                                filetype: imgmsg.type,
+                                textmsg: inpmsg,
                                 messageTime: Timestamp.now(),
                                 uid: currentUser.uid,
                             }),
@@ -118,14 +119,11 @@ const ChatRoom = () => {
         setInpmsg("")
         setImgmsg(null)
         setImgpreview(null)
-        // scrollRef.current.scrollIntoView({ behavior: "smooth", block: "end", inline: "end" });
     }
 
     // function valuetext(value) {
     //     return `${value}°C`;
     // }
-
-
     return (
         <div className="chatroom">
             <div className="chatroom__top">
