@@ -1,11 +1,12 @@
 import './Header.css';
 import { signOut } from 'firebase/auth';
-import { auth } from '../../firebase/FirebaseSetup';
+import { auth, realDatabase } from '../../firebase/FirebaseSetup';
 import { Avatar, ListItemIcon, Menu, MenuItem } from '@mui/material';
-import { useContext,  useState } from 'react';
+import { useContext, useState } from 'react';
 import { AuthContext } from '../../context/AuthContext';
 import { Logout } from '@mui/icons-material';
 import { Link } from 'react-router-dom';
+import { ref, serverTimestamp, set } from 'firebase/database';
 
 function Header() {
   const { currentUser } = useContext(AuthContext)
@@ -47,11 +48,17 @@ function Header() {
         transformOrigin={{ horizontal: 'right', vertical: 'top' }}
         anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }} >
         <MenuItem>
-        <Link to="/profile" style={{display: 'flex', textDecoration: 'none', justifyContent: 'center', color: 'inherit', alignItems: 'center'}}>
-          <Avatar src={currentUser?.photoURL} alt={currentUser?.displayName} /> Profile
-        </Link>
+          <Link to="/profile" style={{ display: 'flex', textDecoration: 'none', justifyContent: 'center', color: 'inherit', alignItems: 'center' }}>
+            <Avatar src={currentUser?.photoURL} alt={currentUser?.displayName} /> Profile
+          </Link>
         </MenuItem>
-        <MenuItem onClick={() => signOut(auth)}>
+        <MenuItem onClick={() => {
+          set(ref(realDatabase, 'status/' + currentUser.uid), {
+            state: "offline",
+            last_changed: serverTimestamp(),
+          });
+          signOut(auth)
+        }}>
           <ListItemIcon style={{ color: '#fff' }}>
             <Logout fontSize="small" />
           </ListItemIcon>

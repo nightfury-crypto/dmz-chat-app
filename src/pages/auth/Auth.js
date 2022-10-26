@@ -2,8 +2,9 @@ import React from 'react'
 import './Auth.css'
 import GoogleIcon from '@mui/icons-material/Google';
 import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
-import { auth, db } from '../../firebase/FirebaseSetup';
+import { auth, db, realDatabase } from '../../firebase/FirebaseSetup';
 import { doc, getDoc, setDoc, Timestamp } from "firebase/firestore";
+import { ref, serverTimestamp, set } from 'firebase/database';
 
 function Auth() {
 
@@ -13,6 +14,10 @@ function Auth() {
         signInWithPopup(auth, provider)
             .then(async (result) => {
                 const user = result.user;
+                set(ref(realDatabase, 'status/' + user.uid), {
+                    state: "online",
+                    last_changed: serverTimestamp(),
+                  });
                 // added user collection if doesnot exists
                 try {
                     const userDocRef = doc(db, "users", user.uid)

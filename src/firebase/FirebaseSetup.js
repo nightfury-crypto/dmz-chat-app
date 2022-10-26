@@ -11,7 +11,8 @@ const firebaseConfig = {
     storageBucket: "dmz-chat.appspot.com",
     messagingSenderId: "483271828225",
     appId: "1:483271828225:web:46874dc30153932fb6f100",
-    measurementId: "G-3ZQT7N5JH2"
+    measurementId: "G-3ZQT7N5JH2",
+    databaseURL: 'https://dmz-chat-default-rtdb.asia-southeast1.firebasedatabase.app' 
   };
   
   // Initialize Firebase
@@ -19,4 +20,4 @@ const firebaseConfig = {
   export const auth = getAuth();
   export const db = getFirestore();
   export const storage = getStorage();
-  export const database = getDatabase();
+  export const realDatabase = getDatabase();

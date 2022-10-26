@@ -128,7 +128,7 @@ function Mainscreen() {
             <IconButton style={{ marginLeft: 'auto', color: '#fff' }} onClick={handleadduser}>
               <AddIcon />
             </IconButton>
-            <CancelIcon onClick={() => { setNoUserFound(false); setSearchQuery(''); setSearchedUser(null)}} />
+            <CancelIcon onClick={() => { setNoUserFound(false); setSearchQuery(''); setSearchedUser(null) }} />
           </div>
         </div>}
       </div>
