@@ -64,11 +64,13 @@ function App() {
   return (
     <div className="App">
       {!currentUser ? <Auth /> :
+      <>
         <Routes>
           <Route index path='/' element={<Mainscreen />} />
           <Route path='/profile' element={<UserProfile />} />
           <Route path='/chatroom/:roomId' element={<ChatRoom />} />
         </Routes>
+      </>
       }
     </div>
   );
